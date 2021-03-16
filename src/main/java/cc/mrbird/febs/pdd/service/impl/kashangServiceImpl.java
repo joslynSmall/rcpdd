@@ -9,7 +9,9 @@ import cc.mrbird.febs.pdd.service.IkashangService;
 import cc.mrbird.febs.tb.utils.AgisoUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.java.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -37,6 +39,7 @@ import java.util.Map;
  * @date 2/8/21 11:54 AM
  */
 @Service
+@Log
 public class kashangServiceImpl implements IkashangService {
 
     @Autowired
@@ -138,7 +141,9 @@ public class kashangServiceImpl implements IkashangService {
             httpPost.setEntity(new UrlEncodedFormEntity(valuePairs, "UTF-8"));
             HttpResponse httpResponse = httpclient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .create();
                 ksResult = gson.fromJson(EntityUtils.toString(httpResponse.getEntity()), new TypeToken<KsResult<KsPayResult>>() {
                 }.getType());
                 if (ksResult.getCode().equals("ok")){
@@ -151,6 +156,7 @@ public class kashangServiceImpl implements IkashangService {
             e.printStackTrace();
             return null;
         }
+        log.info(ksResult.toString());
         return ksResult;
     }
 
@@ -197,7 +203,9 @@ public class kashangServiceImpl implements IkashangService {
             httpPost.setEntity(new UrlEncodedFormEntity(valuePairs, "UTF-8"));
             HttpResponse httpResponse = httpclient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .create();
                 ksResult = gson.fromJson(EntityUtils.toString(httpResponse.getEntity()), new TypeToken<KsResult<KsOrderResult>>() {
                 }.getType());
                 if (ksResult.getCode().equals("ok")){
@@ -209,6 +217,7 @@ public class kashangServiceImpl implements IkashangService {
             e.printStackTrace();
             return null;
         }
+        log.info(ksResult.toString());
         return ksResult;
     }
 }

@@ -15,4 +15,6 @@ public class RedisKeysContans {
 
     public static final String PDD_KS_ORDER_LIST = "PDD_KS_ORDER_LIST:";
 
+    public static final String PDD_LOGIN_KOOKIES = "pdd_login_kookies:";
+
 }

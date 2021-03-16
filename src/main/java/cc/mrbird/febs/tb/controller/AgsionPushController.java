@@ -9,15 +9,18 @@ package cc.mrbird.febs.tb.controller;
  */
 
 import cc.mrbird.febs.common.exception.RedisConnectException;
+import cc.mrbird.febs.pdd.model.PddResult;
 import cc.mrbird.febs.pdd.service.IPddOrderService;
 import cc.mrbird.febs.tb.bean.agiso.AgisoPushInfo;
 import cc.mrbird.febs.tb.bean.agiso.ReturnBackResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.script.ScriptException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -34,5 +37,11 @@ public class AgsionPushController {
     public ReturnBackResult beforeBuyPush(AgisoPushInfo agisoPushInfo) throws IOException, RedisConnectException, NoSuchAlgorithmException, InterruptedException, ScriptException {
         return this.pddOrderService.beforeBuyPushNew(agisoPushInfo);
 
+    }
+
+    @GetMapping("/pdd/orderList")
+    public PddResult getPddOrderList() throws IllegalAccessException, InterruptedException, IOException, RedisConnectException, InvocationTargetException, NoSuchMethodException {
+        PddResult orderList = pddOrderService.getOrderList();
+        return orderList;
     }
 }
