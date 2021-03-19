@@ -100,8 +100,8 @@ public class PddOrderServiceImpl implements IPddOrderService {
         param.setOrderType(0);
         param.setRemarkStatus(-1);
         param.setUrgeShippingStatus(-1);
-        param.setGroupEndTime(1615865525);
-        param.setGroupStartTime(1608089525);
+        param.setGroupEndTime(DateUtil.currentSeconds());
+        param.setGroupStartTime(DateUtil.offsetMonth(new Date(),-1).getTime()/1000);
         param.setPageNumber(1);
         param.setPageSize(20);
         param.setSortType(7);

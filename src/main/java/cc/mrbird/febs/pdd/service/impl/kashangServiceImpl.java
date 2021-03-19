@@ -122,7 +122,6 @@ public class kashangServiceImpl implements IkashangService {
         map.put("product_id", redisService.hget(RedisKeysContans.PDD_GOODS_IDS, String.valueOf(params.getPddGoodsId())));
         map.put("recharge_account", params.getRechargeAccount());
         map.put("quantity", String.valueOf(params.getBuyNum()));
-        map.put("recharge_account", params.getRechargeAccount());
         map.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
         //参考签名算法
         String checkSign = AgisoUtil.sign_ks(map, AgisoContans.APP_SECRET_KS);
