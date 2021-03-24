@@ -14,6 +14,7 @@ public class PDDUrlContants {
     public static final String ORDERCHARGEDETAIL = "https://mms.pinduoduo.com/mars/shop/orderChargeDetail";
 
     public static final String SHIPPING = "https://mms.pinduoduo.com/robot/shop/orders/shipping";
+
     public static final String SHIPPINGREF = "https://mms.pinduoduo.com/mars/shop/orderChargeDetail?type=4399&sn=";
 
     public static final String ORDERCHARGEDETAIL_REF = "https://mms.pinduoduo.com/orders/detail?type=4399&sn=";
