@@ -3,6 +3,7 @@
  */
 package cc.mrbird.febs.pdd.model;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 /**
@@ -15,7 +16,9 @@ import lombok.Data;
 public class PddResult<T> {
 
     private boolean success;
+    @SerializedName("error_code")
     private int errorCode;
+    @SerializedName("error_msg")
     private String errorMsg;
     private T result;
 

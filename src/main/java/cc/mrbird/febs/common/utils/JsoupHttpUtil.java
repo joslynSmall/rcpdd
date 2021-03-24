@@ -3,6 +3,7 @@ package cc.mrbird.febs.common.utils;
 import cc.mrbird.febs.agiso.constants.RedisKeysContans;
 import cc.mrbird.febs.common.exception.RedisConnectException;
 import cc.mrbird.febs.tb.bean.common.JrequestBo;
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -51,7 +52,7 @@ public class JsoupHttpUtil {
     public static Connection.Response excutePostJson(JrequestBo bo, Map<String, String> hearsMap) throws InterruptedException, RedisConnectException, IOException {
 
         Connection connect = Jsoup.connect(bo.getPayurl());
-        Connection.Response execute = connect.requestBody(new Gson().toJson(bo.getPayOrderRequestMap()))
+        Connection.Response execute = connect.requestBody(JSONObject.toJSONString(bo.getPayOrderRequestMap()))
                 .headers(hearsMap)
                 .userAgent(
                         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36")

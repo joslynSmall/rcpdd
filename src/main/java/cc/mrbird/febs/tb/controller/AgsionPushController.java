@@ -9,7 +9,11 @@ package cc.mrbird.febs.tb.controller;
  */
 
 import cc.mrbird.febs.common.exception.RedisConnectException;
+import cc.mrbird.febs.pdd.contants.PDDUrlContants;
+import cc.mrbird.febs.pdd.contants.PddOrderContants;
+import cc.mrbird.febs.pdd.model.PddOrderListParam;
 import cc.mrbird.febs.pdd.model.PddResult;
+import cc.mrbird.febs.pdd.model.orderChargeDetail.param.OrderChargeDetailParam;
 import cc.mrbird.febs.pdd.service.IPddOrderService;
 import cc.mrbird.febs.tb.bean.agiso.AgisoPushInfo;
 import cc.mrbird.febs.tb.bean.agiso.ReturnBackResult;
@@ -41,7 +45,32 @@ public class AgsionPushController {
 
     @GetMapping("/pdd/orderList")
     public PddResult getPddOrderList() throws IllegalAccessException, InterruptedException, IOException, RedisConnectException, InvocationTargetException, NoSuchMethodException {
-        PddResult orderList = pddOrderService.getOrderList();
+
+        PddResult orderList = pddOrderService.getOrderList(PddOrderListParam.builder().orderType(PddOrderContants.orderType_zero).afterSaleType(PddOrderContants.afterSaleType_zero).build()
+                , PDDUrlContants.RECENTORDERLIST);
         return orderList;
     }
+
+    @GetMapping("/pdd/orderList/noshipment")
+    public PddResult getNoshipmentOrderList() throws IllegalAccessException, InterruptedException, IOException, RedisConnectException, InvocationTargetException, NoSuchMethodException {
+
+        PddResult orderList = pddOrderService.getNoshipmentOrderList();
+        return orderList;
+    }
+
+    @GetMapping("/pdd/orderList/orderChargeDetail")
+    public PddResult getOrderChargeDetail(String orderSn) throws IllegalAccessException, InterruptedException, IOException, RedisConnectException, InvocationTargetException, NoSuchMethodException {
+
+        PddResult result = pddOrderService.getOrderChargeDetail(orderSn);
+        return result;
+    }
+
+    @GetMapping("/pdd/order/shipping")
+    public PddResult shipping(String orderSn) throws IllegalAccessException, InterruptedException, IOException, RedisConnectException, InvocationTargetException, NoSuchMethodException {
+
+        PddResult orderList = pddOrderService.shipping(orderSn);
+        return orderList;
+    }
+
+
 }

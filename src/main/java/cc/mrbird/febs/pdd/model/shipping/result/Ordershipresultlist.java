@@ -1,7 +1,7 @@
 /**
  * Copyright 2021 jb51.net
  */
-package cc.mrbird.febs.pdd.shipping.result;
+package cc.mrbird.febs.pdd.model.shipping.result;
 
 import com.google.gson.annotations.SerializedName;
 

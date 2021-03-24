@@ -1,21 +1,21 @@
 /**
  * Copyright 2021 jb51.net
  */
-package cc.mrbird.febs.pdd.shipping.param;
+package cc.mrbird.febs.pdd.model.shipping.param;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Auto-generated: 2021-03-19 13:38:9
+ * Auto-generated: 2021-03-20 19:48:34
  *
  * @author jb51.net (i@jb51.net)
  * @website http://tools.jb51.net/code/json2javabean
  */
 public class Ordershiprequestlist {
 
-    @SerializedName("orderSn")
+    @SerializedName("ordersn")
     private String ordersn;
-    @SerializedName("deliveryType")
+    @SerializedName("deliverytype")
     private int deliverytype;
 
     public void setOrdersn(String ordersn) {

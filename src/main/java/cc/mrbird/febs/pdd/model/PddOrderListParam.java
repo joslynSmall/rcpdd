@@ -3,12 +3,19 @@
  */
 package cc.mrbird.febs.pdd.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 /**
  * Auto-generated: 2021-03-16 14:58:59
  *
  * @author json.cn (i@json.cn)
  * @website http://www.json.cn/java2pojo/
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class PddOrderListParam {
 
     private int orderType;
