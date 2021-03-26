@@ -121,40 +121,47 @@ public class kashangServiceImpl implements IkashangService {
         map.put("customer_id", AgisoContans.APP_NUM);
         map.put("product_id", redisService.hget(RedisKeysContans.PDD_GOODS_IDS, String.valueOf(params.getPddGoodsId())));
         map.put("recharge_account", params.getRechargeAccount());
-        map.put("quantity", String.valueOf(params.getBuyNum()));
-        map.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
-        //参考签名算法
-        String checkSign = AgisoUtil.sign_ks(map, AgisoContans.APP_SECRET_KS);
 
-        //业务参数
-        map.put("sign", checkSign);
 
         //参数签名
+        // 处理多单问题
+        for (int i = 0; i < params.getBuyNum(); i++) {
 
-        List<BasicNameValuePair> valuePairs = new ArrayList<BasicNameValuePair>();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            valuePairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-        //发起POST请求
-        try {
-            httpPost.setEntity(new UrlEncodedFormEntity(valuePairs, "UTF-8"));
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                Gson gson = new GsonBuilder()
-                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                        .create();
-                ksResult = gson.fromJson(EntityUtils.toString(httpResponse.getEntity()), new TypeToken<KsResult<KsPayResult>>() {
-                }.getType());
-                if (ksResult.getCode().equals("ok")){
-                    KsPayResult result = (KsPayResult)ksResult.getData();
-                    redisService.hset(RedisKeysContans.PDD_ORDER_LIST,params.getPddOrderNumer(), String.valueOf(result.getState()));
-                    redisService.hset(RedisKeysContans.PDD_KS_ORDER_LIST,params.getPddOrderNumer(), result.getOrderId());
-                }
+            map.put("quantity", "1");
+            map.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+            //参考签名算法
+            String checkSign = AgisoUtil.sign_ks(map, AgisoContans.APP_SECRET_KS);
+
+            //业务参数
+            map.put("sign", checkSign);
+
+
+            List<BasicNameValuePair> valuePairs = new ArrayList<BasicNameValuePair>();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                valuePairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            //发起POST请求
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(valuePairs, "UTF-8"));
+                HttpResponse httpResponse = httpclient.execute(httpPost);
+                if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    Gson gson = new GsonBuilder()
+                            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                            .create();
+                    ksResult = gson.fromJson(EntityUtils.toString(httpResponse.getEntity()), new TypeToken<KsResult<KsPayResult>>() {
+                    }.getType());
+                    if (ksResult.getCode().equals("ok")){
+                        KsPayResult result = (KsPayResult)ksResult.getData();
+                        redisService.hset(RedisKeysContans.PDD_ORDER_LIST,params.getPddOrderNumer(), String.valueOf(result.getState()));
+                        redisService.hset(RedisKeysContans.PDD_KS_ORDER_LIST,params.getPddOrderNumer(), result.getOrderId());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
+
         log.info(ksResult.toString());
         return ksResult;
     }
