@@ -117,16 +117,14 @@ public class kashangServiceImpl implements IkashangService {
         //设置请求头
         httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded"); //设置传输的数据格式
 
-        Map<String, String> map = new HashMap();
-        map.put("customer_id", AgisoContans.APP_NUM);
-        map.put("product_id", redisService.hget(RedisKeysContans.PDD_GOODS_IDS, String.valueOf(params.getPddGoodsId())));
-        map.put("recharge_account", params.getRechargeAccount());
-
-
         //参数签名
         // 处理多单问题
         for (int i = 0; i < params.getBuyNum(); i++) {
 
+            Map<String, String> map = new HashMap();
+            map.put("customer_id", AgisoContans.APP_NUM);
+            map.put("product_id", redisService.hget(RedisKeysContans.PDD_GOODS_IDS, String.valueOf(params.getPddGoodsId())));
+            map.put("recharge_account", params.getRechargeAccount());
             map.put("quantity", "1");
             map.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
             //参考签名算法
@@ -161,7 +159,6 @@ public class kashangServiceImpl implements IkashangService {
                 return null;
             }
         }
-
         log.info(ksResult.toString());
         return ksResult;
     }
