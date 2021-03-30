@@ -7,7 +7,6 @@ import cc.mrbird.febs.common.exception.RedisConnectException;
 import cc.mrbird.febs.common.service.RedisService;
 import cc.mrbird.febs.pdd.service.IkashangService;
 import cc.mrbird.febs.tb.utils.AgisoUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -96,16 +95,15 @@ public class kashangServiceImpl implements IkashangService {
     @Override
     public KsResult summitPddOrder(TxmSubmitOrderParams params) throws UnsupportedEncodingException, NoSuchAlgorithmException, RedisConnectException {
 
-
         //计算提交签名
         String sign = params.getSign();
-        String befsign = params.getPddOrderNumer()+params.getPddGoodsId()+params.getBuyNum()+"joslyn";
+        String befsign = params.getPddOrderNumer() + params.getPddGoodsId() + params.getBuyNum() + "joslyn";
         String afsign = DigestUtils.md5DigestAsHex(befsign.getBytes());
-        if (!sign.equals(afsign)){
-            return KsResult.error("-3","签名校验失败");
+        if (!sign.equals(afsign)) {
+            return KsResult.error("-3", "签名校验失败");
         }
-        if (params.getPddOrderNumer().equals(redisService.hget(RedisKeysContans.PDD_ORDER_LIST, String.valueOf(params.getPddOrderNumer())))){
-            return KsResult.error("-4","订单重复提交");
+        if (params.getPddOrderNumer().equals(redisService.hget(RedisKeysContans.PDD_ORDER_LIST, String.valueOf(params.getPddOrderNumer())))) {
+            return KsResult.error("-4", "订单重复提交");
         }
 
         KsResult ksResult = null;
@@ -148,10 +146,10 @@ public class kashangServiceImpl implements IkashangService {
                             .create();
                     ksResult = gson.fromJson(EntityUtils.toString(httpResponse.getEntity()), new TypeToken<KsResult<KsPayResult>>() {
                     }.getType());
-                    if (ksResult.getCode().equals("ok")){
-                        KsPayResult result = (KsPayResult)ksResult.getData();
-                        redisService.hset(RedisKeysContans.PDD_ORDER_LIST,params.getPddOrderNumer(), String.valueOf(result.getState()));
-                        redisService.hset(RedisKeysContans.PDD_KS_ORDER_LIST,params.getPddOrderNumer(), result.getOrderId());
+                    if (ksResult.getCode().equals("ok")) {
+                        KsPayResult result = (KsPayResult) ksResult.getData();
+                        redisService.hset(RedisKeysContans.PDD_ORDER_LIST, params.getPddOrderNumer(), String.valueOf(result.getState()));
+                        redisService.hset(RedisKeysContans.PDD_KS_ORDER_LIST, params.getPddOrderNumer(), result.getOrderId());
                     }
                 }
             } catch (Exception e) {
@@ -164,17 +162,17 @@ public class kashangServiceImpl implements IkashangService {
     }
 
     @Override
-    public KsResult getOrderStatusByOrderId(String pddOrderNumer,String sign) throws UnsupportedEncodingException, NoSuchAlgorithmException, RedisConnectException {
+    public KsResult getOrderStatusByOrderId(String pddOrderNumer, String sign) throws UnsupportedEncodingException, NoSuchAlgorithmException, RedisConnectException {
 
 
         //计算提交签名
-        String befsign = pddOrderNumer+"joslyn";
+        String befsign = pddOrderNumer + "joslyn";
         String afsign = DigestUtils.md5DigestAsHex(befsign.getBytes());
-        if (!sign.equals(afsign)){
-            return KsResult.error("-3","签名校验失败");
+        if (!sign.equals(afsign)) {
+            return KsResult.error("-3", "签名校验失败");
         }
 
-        String ksOrderId = redisService.hget(RedisKeysContans.PDD_KS_ORDER_LIST,pddOrderNumer);
+        String ksOrderId = redisService.hget(RedisKeysContans.PDD_KS_ORDER_LIST, pddOrderNumer);
 
         KsResult ksResult = null;
 
@@ -211,9 +209,9 @@ public class kashangServiceImpl implements IkashangService {
                         .create();
                 ksResult = gson.fromJson(EntityUtils.toString(httpResponse.getEntity()), new TypeToken<KsResult<KsOrderResult>>() {
                 }.getType());
-                if (ksResult.getCode().equals("ok")){
-                    KsOrderResult result = (KsOrderResult)ksResult.getData();
-                    redisService.hset(RedisKeysContans.PDD_ORDER_LIST,pddOrderNumer, String.valueOf(result.getState()));
+                if (ksResult.getCode().equals("ok")) {
+                    KsOrderResult result = (KsOrderResult) ksResult.getData();
+                    redisService.hset(RedisKeysContans.PDD_ORDER_LIST, pddOrderNumer, String.valueOf(result.getState()));
                 }
             }
         } catch (Exception e) {
